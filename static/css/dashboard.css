@@ -23,7 +23,18 @@ body {
  */
 .navbar-fixed-top {
   border: 0;
+
 }
+
+/*#left_nav*/
+/*{*/
+  /*padding-left: 100px;*/
+/*}*/
+
+/*nav ul li {*/
+  /*font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;*/
+  /*font-size: medium;*/
+/*}*/
 
 /*
  * Sidebar
