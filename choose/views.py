@@ -84,12 +84,6 @@ def node(request):
     return redirect("/test")
 
 
-def xixi():
-    print("xixi")
-
-
-
-
 def add_nodes(request):
     """
     用来初始化588个时间段节点，只允许运行一次！！！！
