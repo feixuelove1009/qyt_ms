@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 
+
 class User(models.Model):
     # 英文名
     e_name = models.CharField(max_length=128)
@@ -45,6 +46,7 @@ class TestBeds(models.Model):
 
     def __str__(self):
         return self.bed_name
+
 
 class Rocks(models.Model):
 

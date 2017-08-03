@@ -25,6 +25,22 @@ body {
   border: 0;
 
 }
+nav {
+  background-color: #428bca;
+}
+nav a{
+  font-size: 18px;
+  color: white;
+}
+nav ul.navbar-left li {
+  width: 120px;
+  /*border-left: 1px solid grey;*/
+}
+nav a.navbar-brand img{
+  display:inline ;
+  width: 30px;
+  height: 30px;
+}
 
 /*#left_nav*/
 /*{*/
@@ -55,7 +71,7 @@ body {
     padding: 20px;
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-    background-color: #f5f5f5;
+    background-color: #e3e3e3;
     border-right: 1px solid #eee;
   }
 }
@@ -67,6 +83,7 @@ body {
   margin-left: -20px;
 }
 .nav-sidebar > li > a {
+  color: #0f0f0f;
   padding-right: 20px;
   padding-left: 20px;
 }
@@ -74,7 +91,7 @@ body {
 .nav-sidebar > .active > a:hover,
 .nav-sidebar > .active > a:focus {
   color: #fff;
-  background-color: #428bca;
+  background-color: #27ca51;
 }
 
 
