@@ -2,9 +2,9 @@
  * Created by Administrator on 2017/8/2.
  */
 $(document).ready(function () {
-    $('#submit').click(function () {
-        var name = $('#login input[type="text"]').val();
-        var pwd = $('#login input[type="password"]').val();
+    $("#submit").click(function () {
+        var name = $('input[type="text"]').val();
+        var pwd = $('input[type="password"]').val();
         $.ajax({
             url:"/login/",
             type:"POST",
@@ -14,13 +14,10 @@ $(document).ready(function () {
                 "pwd":pwd
             },
             success:function (data) {
-
                 if(data.status){
-                    $("span.login-message").text("登录成功！返回先前页面...").css({"color":"darkgreen","font-size":"14px"});
-                    window.setTimeout("window.location.href='/test/'",1000);
+                    window.location.href="/test/";
                 }else{
-                    $("span.login-message").text(data.message).css({"color":"#ea5d45","font-size":"14px"});
-                    window.setTimeout('$("span.login-message").text("").removeAttr("style");',2000);
+                    alert(data.message);
                 }
             }
         });
@@ -29,4 +26,35 @@ $(document).ready(function () {
     
 });
 
+
+// using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+
+// 用于ajax时的csrf问题
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
 

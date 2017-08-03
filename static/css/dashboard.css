@@ -7,7 +7,6 @@ body {
   padding-top: 50px;
 }
 
-
 /*
  * Global add-ons
  */
@@ -23,23 +22,6 @@ body {
  */
 .navbar-fixed-top {
   border: 0;
-
-}
-nav {
-  background-color: #428bca;
-}
-nav a{
-  font-size: 18px;
-  color: white;
-}
-nav ul.navbar-left li {
-  width: 120px;
-  /*border-left: 1px solid grey;*/
-}
-nav a.navbar-brand img{
-  display:inline ;
-  width: 30px;
-  height: 30px;
 }
 
 /*#left_nav*/

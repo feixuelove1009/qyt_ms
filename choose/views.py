@@ -9,9 +9,9 @@ login_status = False
 
 
 def login(request):
-    global login_status
-    ret = {"status": False, "message": None}
     if request.method == "POST":
+        global login_status
+        ret = {"status": False, "message": None}
         name = request.POST.get("name", None)
         pwd = request.POST.get("pwd", None)
         print(name)
@@ -25,7 +25,8 @@ def login(request):
             request.session['username'] = name
             ret["status"] = True
             login_status = True
-    return HttpResponse(json.dumps(ret))
+        return HttpResponse(json.dumps(ret))
+    return render(request, "login.html")
 
 
 def logout(request):
