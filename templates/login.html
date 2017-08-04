@@ -21,6 +21,7 @@
     <div class="container">
 
       <form class="form-signin">
+        {% csrf_token %}
         <h2 class="form-signin-heading">Please sign in</h2>
         <label for="inputName" class="sr-only">UserName</label>
         <input type="text" id="inputName" class="form-control" placeholder="UserName" required autofocus>
