@@ -14,8 +14,6 @@ def login(request):
         ret = {"status": False, "message": None}
         name = request.POST.get("name", None)
         pwd = request.POST.get("pwd", None)
-        print(name)
-        print(pwd)
 
         valid = True
 
