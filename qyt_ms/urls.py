@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^login/', views.login),
     url(r'^logout/', views.logout),
     url(r'^test/', include("choose.urls"), name="choose"),
+    url(r'', views.test),
 ]
