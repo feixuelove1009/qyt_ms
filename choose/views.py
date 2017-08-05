@@ -1,6 +1,8 @@
 from django.shortcuts import render, HttpResponse, redirect
 from choose import models
 import json
+from ldap3 import Server, Connection, NTLM, ALL
+
 # Create your views here.
 
 
@@ -8,22 +10,52 @@ TOTAL_COUNT = 3
 login_status = False
 
 
+# def login(request):
+#     if request.method == "POST":
+#         global login_status
+#         ret = {"status": False, "message": None}
+#         name = request.POST.get("name", None)
+#         pwd = request.POST.get("pwd", None)
+#
+#         valid = True
+#
+#         if not valid:
+#             ret["message"] = "用户名或密码错误！"
+#         else:
+#             request.session['username'] = name
+#             ret["status"] = True
+#             login_status = True
+#         return HttpResponse(json.dumps(ret))
+#     return render(request, "login.html")
+
 def login(request):
     if request.method == "POST":
-        global login_status
         ret = {"status": False, "message": None}
         name = request.POST.get("name", None)
         pwd = request.POST.get("pwd", None)
+        if not name or not pwd:
+            ret["message"] = "用户名或密码不能为空！"
+            return HttpResponse(json.dumps(ret))
 
-        valid = True
-
-        if not valid:
+        server = Server('ldap://172.16.66.6', use_ssl=True)
+        try:
+            conn = Connection(server, user="qytang\\%s" % name, password=pwd, authentication=NTLM, auto_bind=True)
+            d = conn.extend.standard.who_am_i()
+            print(d)
+        except Exception as e:
+            print("用户登录出现错误： ", e)
             ret["message"] = "用户名或密码错误！"
-        else:
-            request.session['username'] = name
-            ret["status"] = True
-            login_status = True
+            return HttpResponse(json.dumps(ret))
+
+        global login_status
+        request.session['username'] = name
+        ret["status"] = True
+        login_status = True
+        user = models.User.objects.filter(e_name=name)
+        if not user:
+            models.User.objects.create(e_name=name, c_name=name)
         return HttpResponse(json.dumps(ret))
+
     return render(request, "login.html")
 
 
