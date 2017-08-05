@@ -10,24 +10,6 @@ TOTAL_COUNT = 3
 login_status = False
 
 
-# def login(request):
-#     if request.method == "POST":
-#         global login_status
-#         ret = {"status": False, "message": None}
-#         name = request.POST.get("name", None)
-#         pwd = request.POST.get("pwd", None)
-#
-#         valid = True
-#
-#         if not valid:
-#             ret["message"] = "用户名或密码错误！"
-#         else:
-#             request.session['username'] = name
-#             ret["status"] = True
-#             login_status = True
-#         return HttpResponse(json.dumps(ret))
-#     return render(request, "login.html")
-
 def login(request):
     if request.method == "POST":
         ret = {"status": False, "message": None}
