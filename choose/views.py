@@ -1,13 +1,14 @@
 from django.shortcuts import render, HttpResponse, redirect
 from choose import models
 import json
-from ldap3 import Server, Connection, NTLM, ALL
+from choose import qytang_ldap
 
 # Create your views here.
 
 
 TOTAL_COUNT = 3
 login_status = False
+GROUP_STRING = 'CN=npsecremotelab,OU=NPSEC_RemoteLab,OU=Security,OU=QYT,DC=qytang,DC=com'
 
 
 def login(request):
@@ -19,25 +20,28 @@ def login(request):
             ret["message"] = "用户名或密码不能为空！"
             return HttpResponse(json.dumps(ret))
 
-        server = Server('ldap://172.16.66.6', use_ssl=True)
-        try:
-            conn = Connection(server, user="qytang\\%s" % name, password=pwd, authentication=NTLM, auto_bind=True)
-            d = conn.extend.standard.who_am_i()
-            print(d)
-        except Exception as e:
-            print("用户登录出现错误： ", e)
+        result = qytang_ldap.qytldap(name, pwd)
+
+        if not result:
+            print("用户登录出现错误：  用户名或者密码错误！")
             ret["message"] = "用户名或密码错误！"
             return HttpResponse(json.dumps(ret))
-
-        global login_status
-        request.session['username'] = name
-        ret["status"] = True
-        login_status = True
-        user = models.User.objects.filter(e_name=name)
-        if not user:
-            models.User.objects.create(e_name=name, c_name=name)
-        return HttpResponse(json.dumps(ret))
-
+        else:
+            group_list = result[0]
+            c_name = result[1]
+        if GROUP_STRING in group_list:
+            global login_status
+            request.session['username'] = name
+            ret["status"] = True
+            login_status = True
+            user = models.User.objects.filter(e_name=name)
+            if not user:
+                models.User.objects.create(e_name=name, c_name=c_name)
+            return HttpResponse(json.dumps(ret))
+        else:
+            print("用户登录出现错误:  该用户不在指定的组内！")
+            ret["message"] = "你不在指定用户组内！"
+            return HttpResponse(json.dumps(ret))
     return render(request, "login.html")
 
 
@@ -68,6 +72,7 @@ def test(request):
                                               "rock_name": rock_name,
 
                                               "user_name": user_name})
+
 
 def node(request):
     if request.method == "POST":
