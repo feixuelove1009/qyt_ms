@@ -25,7 +25,7 @@ SECRET_KEY = '&0@gqi+ymc9h#27yre33$k#gpoc#7di%o%+zqv1)c7_n2i&ip7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -121,5 +121,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
+   '/usr/local/lib/python3.5/dist-packages/Django-1.11.4-py3.5.egg/django/contrib/admin/static/',
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'common-static')  
 
