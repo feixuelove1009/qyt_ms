@@ -1,2 +1,7 @@
 .idea/
 db.sqlite3
+choose/__pycache__/
+choose/management/__pycache__/
+choose/management/commands/__pycache__/
+choose/migrations/__pycache__/
+qyt_ms/__pycache__/
