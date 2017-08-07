@@ -8,8 +8,9 @@ from choose import qytang_ldap
 
 TOTAL_COUNT = 3
 login_status = False
-GROUP_STRING = 'CN=npsecremotelab,OU=NPSEC_RemoteLab,OU=Security,OU=QYT,DC=qytang,DC=com'
-
+STUDENT_GROUP_STRING = 'CN=npsecremotelab,OU=NPSEC_RemoteLab,OU=Security,OU=QYT,DC=qytang,DC=com'
+TEACHER_GROUP_STRING = 'CN=qyt-teachers,CN=Users,DC=qytang,DC=com'
+kind = ""
 
 def login(request):
     if request.method == "POST":
@@ -28,8 +29,13 @@ def login(request):
             return HttpResponse(json.dumps(ret))
         else:
             group_list = result[0]
+            print(group_list)
             c_name = result[1]
-        if GROUP_STRING in group_list:
+        if STUDENT_GROUP_STRING in group_list:
+            request.session["user_kind"] = "student"
+        if TEACHER_GROUP_STRING in group_list:
+            request.session["user_kind"] = "teacher"
+        if STUDENT_GROUP_STRING in group_list or TEACHER_GROUP_STRING in group_list:
             global login_status
             request.session['username'] = name
             ret["status"] = True
@@ -49,6 +55,7 @@ def logout(request):
     global login_status
     try:
         del request.session["username"]
+        del request.session["user_kind"]
         login_status = False
     except:
         pass
@@ -79,6 +86,9 @@ def node(request):
         ret = {"status": False, "message": None, "name": None}
         if not login_status:
             ret["message"] = "尚未登陆，不能选择时间段！"
+            return HttpResponse(json.dumps(ret))
+        if request.session["user_kind"] == "teacher":
+            ret["message"] = "你是老师！不要和学生抢试验台！管理请进后台！"
             return HttpResponse(json.dumps(ret))
         name = request.session["username"]
         rock = request.POST.get("rock", None)
