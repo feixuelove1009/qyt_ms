@@ -3,13 +3,19 @@
  */
 
 $(document).ready(function () {
-
-    $(".nav-sidebar li a").click(function () {
-        rock_name = $(this).text();
-        next_url = "/test/?rock="+rock_name;
-        window.location.href=next_url;
+    $("nav ul.navbar-left li a").click(function () {
         $(this).parent().siblings().removeClass("active");
         $(this).parent().addClass("active");
+    });
+
+
+    $(".nav-sidebar li a").click(function () {
+        var nav_name = $("nav ul.navbar-nav li.active").children().first().attr("name");
+        var rock_name = $(this).text();
+        var next_url = "/" + nav_name + "/?rock=" + rock_name;
+        $(this).parent().siblings().removeClass("active");
+        $(this).parent().addClass("active");
+        window.location.href=next_url;
     });
 });
 

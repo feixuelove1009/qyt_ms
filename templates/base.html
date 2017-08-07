@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="LiuJiang">
+    <link rel="icon" href="/static/imgs/logo.jpg">
+
+    <title>QYT</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="/static/css/dashboard.css" rel="stylesheet">
+    <style>
+      nav {
+          background-color: #428bca;
+        }
+      div.navbar-header a{
+          font-size: 24px;
+      }
+      nav a {
+          text-align: center;
+          font-size: 18px;
+          color: white;
+        }
+
+        nav ul.navbar-left{
+            margin-left: -20px;
+        }
+
+        nav ul.navbar-left li {
+          width: 20%;
+          /*border-left: 1px solid grey;*/
+        }
+
+        nav a.navbar-brand img{
+          display:inline ;
+          width: 30px;
+          height: 30px;
+        }
+        .table-responsive {
+            margin-top: -10px;
+            margin-bottom: -25px;
+        }
+      </style>
+
+  </head>
+
+  <body>
+
+  <!--顶部导航栏-->
+    <nav class="navbar navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">导航</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+
+            <a class="navbar-brand" href="/test/?rock=CCNAsec">
+                <img alt="Brand" src="/static/imgs/logo.jpg"/>
+                乾颐堂实验室</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-left" style="padding-left:50px">
+              {% block nav %}
+            <li class="active"><a name="test" href="/test/?rock=CCNAsec">实验中心<img src="/static/imgs/arrow.png" style="display:block;margin-left:30px;margin-top:7px;margin-bottom:-30px;width:20px;height: 10px"/></a></li>
+            <li><a name="homework" href="/homework/">作业中心</a></li>
+            <li><a href="#">预留板块</a></li>
+            <li><a href="/admin/" target="_blank">后台管理</a></li>
+            <li><a href="#">获取帮助</a></li>
+              {% endblock %}
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+              {% if user_name %}
+                  <li><a href="#">{{ user_name }}</a></li>
+              {% else %}
+                <li><a id="user" href="#" data-toggle="modal" data-target="#Login-Register-Modal">登录</a></li>
+              {% endif %}
+            <li id="logout"><a href="/logout/">退出</a></li>
+          </ul>
+
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+              {% for rock in rocks %}
+              {% if rock.rock_name == rock_name %}
+                <li class="active">
+                    <a href="#">{{ rock.rock_name }}</a>
+                </li>
+                  {% else %}
+                  <li><a href="#">{{ rock.rock_name }}</a></li>
+              {% endif %}
+              {% endfor %}
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            {% block main %}{% endblock %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/jquery-3.2.1.min.js"></script>
+    <script src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+    <script>
+        $("#user").click(function () {
+            if($(this).text() == "登录"){
+                window.location.href = "/login/";
+            }
+        });
+
+        $("table tbody tr td").click(function () {
+            if($("#user").text() == "登录"){
+                alert("请先登录！");
+                return
+            }
+            if ($(this).text() == "可选"){
+                ret = confirm("确定选择此时间节点？");
+                if(!ret){return}
+                rock = $(".nav-sidebar li.active a").text();
+                test_bed = $(this).parent().parent().parent().parent().prev().text();
+                weekday = $(this).attr("weekday");
+                time_zone = $(this).attr("time_zone");
+                var ele = $(this);
+                $.ajax({
+                    url:"/test/node/",
+                    type:"POST",
+                    dataType:'json',
+                    data:{
+                        "rock":rock,
+                        "test_bed":test_bed,
+                        "weekday":weekday,
+                        "time_zone":time_zone
+                    },
+                    success:function (data) {
+                        if(data.status){
+                            ele.text(data.name);
+                            ele.css("background-color","#22ff4f");
+                        }else{
+                            alert(data.message);
+                        }
+                    }
+                });
+
+            }
+        });
+    </script>
+  </body>
+</html>

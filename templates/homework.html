@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block nav %}
+    <li><a name="test" href="/test/?rock=CCNAsec">实验中心</a></li>
+    <li class="active"><a name="homework" href="/homework/">作业中心<img src="/static/imgs/arrow.png" style="display:block;margin-left:30px;margin-top:7px;margin-bottom:-30px;width:20px;height: 10px"/></a></li>
+    <li><a href="#">预留板块</a></li>
+    <li><a href="/admin/" target="_blank">后台管理</a></li>
+    <li><a href="#">获取帮助</a></li>
+{% endblock %}
+
+{% block main %}
+作业中心
+{% endblock %}
