@@ -3,12 +3,6 @@
  */
 
 $(document).ready(function () {
-    $("nav ul.navbar-left li a").click(function () {
-        $(this).parent().siblings().removeClass("active");
-        $(this).parent().addClass("active");
-    });
-
-
     $(".nav-sidebar li a").click(function () {
         var nav_name = $("nav ul.navbar-nav li.active").children().first().attr("name");
         var rock_name = $(this).text();
