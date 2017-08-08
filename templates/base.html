@@ -71,7 +71,7 @@
           <ul class="nav navbar-nav navbar-left" style="padding-left:50px">
               {% block nav %}
             <li class="active"><a name="test" href="/test/?rock=CCNAsec">实验中心<img src="/static/imgs/arrow.png" style="display:block;margin-left:30px;margin-top:7px;margin-bottom:-30px;width:20px;height: 10px"/></a></li>
-            <li><a name="homework" href="/homework/">作业中心</a></li>
+            <li><a name="homework" href="/homework/?rock=CCNAsec">作业中心</a></li>
             <li><a href="#">预留板块</a></li>
             <li><a href="/admin/" target="_blank">后台管理</a></li>
             <li><a href="#">获取帮助</a></li>
@@ -96,22 +96,7 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-              {% for rock in rocks %}
-              {% if rock.rock_name == rock_name %}
-                <li class="active">
-                    <a href="#">{{ rock.rock_name }}</a>
-                </li>
-                  {% else %}
-                  <li><a href="#">{{ rock.rock_name }}</a></li>
-              {% endif %}
-              {% endfor %}
-          </ul>
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            {% block main %}{% endblock %}
-        </div>
+      {% block main %}{% endblock %}
       </div>
     </div>
 

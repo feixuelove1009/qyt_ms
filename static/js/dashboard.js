@@ -6,7 +6,6 @@ $(document).ready(function () {
     $(".nav-sidebar li a").click(function () {
         var nav_name = $("nav ul.navbar-nav li.active").children().first().attr("name");
         var rock_name = $(this).text();
-        alert(nav_name);
         var next_url = "/" + nav_name + "/?rock=" + rock_name;
         $(this).parent().siblings().removeClass("active");
         $(this).parent().addClass("active");
