@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, redirect, HttpResponseRedirect
 from choose import models
 import json
 from choose import qytang_ldap
@@ -12,21 +12,24 @@ STUDENT_GROUP_STRING = 'CN=npsecremotelab,OU=NPSEC_RemoteLab,OU=Security,OU=QYT,
 TEACHER_GROUP_STRING = 'CN=qyt-teachers,CN=Users,DC=qytang,DC=com'
 kind = ""
 
+
 def login(request):
     if request.method == "POST":
         ret = {"status": False, "message": None}
         name = request.POST.get("name", None)
         pwd = request.POST.get("pwd", None)
+        print(name, pwd)
         if not name or not pwd:
             ret["message"] = "用户名或密码不能为空！"
-            return HttpResponse(json.dumps(ret))
+            return render(request, "login.html", {"ret": ret})
 
         result = qytang_ldap.qytldap(name, pwd)
 
         if not result:
             print("用户登录出现错误：  用户名或者密码错误！")
             ret["message"] = "用户名或密码错误！"
-            return HttpResponse(json.dumps(ret))
+            return render(request, "login.html", {"ret": ret})
+
         else:
             group_list = result[0]
             print(group_list)
@@ -43,11 +46,13 @@ def login(request):
             user = models.User.objects.filter(e_name=name)
             if not user:
                 models.User.objects.create(e_name=name, c_name=c_name)
-            return HttpResponse(json.dumps(ret))
+            # return HttpResponse(json.dumps(ret))
+            return HttpResponseRedirect("/test/")
         else:
             print("用户登录出现错误:  该用户不在指定的组内！")
             ret["message"] = "你不在指定用户组内！"
-            return HttpResponse(json.dumps(ret))
+            return render(request, "login.html", {"ret": ret})
+
     return render(request, "login.html")
 
 

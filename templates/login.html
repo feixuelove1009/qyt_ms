@@ -19,22 +19,22 @@
   <body>
     <div class="container">
     <img style="width:80px;height:80px"  class="img-size" alt="Brand" src="/static/imgs/logo.jpg"/>
-      <form class="form-signin">
+      <form class="form-signin" action="/login/" method="post">
         {% csrf_token %}
         <h1 class="form-signin-heading">乾颐堂网络实验室</h1>
         <br />
+          <p>{{ ret.message }}</p>
         <label for="inputName" class="sr-only">Username</label>
-        <input type="text" id="inputName" class="form-control" placeholder="Username" required autofocus>
+        <input type="text" id="inputName" class="form-control" name="name" placeholder="Username" required autofocus>
         <br />
           <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <input type="password" id="inputPassword" class="form-control" name="pwd" placeholder="Password" required>
         <button type="reset" class="btn btn-lg btn-default pull-left">重置</button>
-        <a id="submit" type="submit" class="btn btn-lg btn-primary pull-right">登录</a>
+        <button id="submit" type="submit" class="btn btn-lg btn-primary pull-right">登录</button>
       </form>
     </div> <!-- /container -->
             <a style="margin-top:20px;left: 38%;position:absolute" href="/test/">先不登录，看看再说。</a>
 
     <script src="/static/jquery-3.2.1.min.js"></script>
-    <script src="/static/js/login.js"></script>
   </body>
 </html>
