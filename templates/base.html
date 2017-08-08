@@ -15,6 +15,7 @@
     <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="/static/css/dashboard.css" rel="stylesheet">
+      {% block css %}{% endblock %}
     <style>
       nav {
           background-color: #428bca;
@@ -79,8 +80,8 @@
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
-              {% if user_name %}
-                  <li><a href="#">{{ user_name }}</a></li>
+              {% if request.session.username %}
+                  <li><a href="#">{{ request.session.username }}</a></li>
               {% else %}
                 <li><a id="user" href="#" data-toggle="modal" data-target="#Login-Register-Modal">登录</a></li>
               {% endif %}
@@ -106,48 +107,50 @@
     <script src="/static/jquery-3.2.1.min.js"></script>
     <script src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
     <script src="/static/js/dashboard.js"></script>
-    <script>
-        $("#user").click(function () {
-            if($(this).text() == "登录"){
-                window.location.href = "/login/";
-            }
-        });
+    {% block spt %}
+        <script>
+            $("#user").click(function () {
+                if($(this).text() == "登录"){
+                    window.location.href = "/login/";
+                }
+            });
 
-        $("table tbody tr td").click(function () {
-            if($("#user").text() == "登录"){
-                alert("请先登录！");
-                return
-            }
-            if ($(this).text() == "可选"){
-                ret = confirm("确定选择此时间节点？");
-                if(!ret){return}
-                rock = $(".nav-sidebar li.active a").text();
-                test_bed = $(this).parent().parent().parent().parent().prev().text();
-                weekday = $(this).attr("weekday");
-                time_zone = $(this).attr("time_zone");
-                var ele = $(this);
-                $.ajax({
-                    url:"/test/node/",
-                    type:"POST",
-                    dataType:'json',
-                    data:{
-                        "rock":rock,
-                        "test_bed":test_bed,
-                        "weekday":weekday,
-                        "time_zone":time_zone
-                    },
-                    success:function (data) {
-                        if(data.status){
-                            ele.text(data.name);
-                            ele.css("background-color","#22ff4f");
-                        }else{
-                            alert(data.message);
+            $("table tbody tr td").click(function () {
+                if($("#user").text() == "登录"){
+                    alert("请先登录！");
+                    return
+                }
+                if ($(this).text() == "可选"){
+                    ret = confirm("确定选择此时间节点？");
+                    if(!ret){return}
+                    rock = $(".nav-sidebar li.active a").text();
+                    test_bed = $(this).parent().parent().parent().parent().prev().text();
+                    weekday = $(this).attr("weekday");
+                    time_zone = $(this).attr("time_zone");
+                    var ele = $(this);
+                    $.ajax({
+                        url:"/test/node/",
+                        type:"POST",
+                        dataType:'json',
+                        data:{
+                            "rock":rock,
+                            "test_bed":test_bed,
+                            "weekday":weekday,
+                            "time_zone":time_zone
+                        },
+                        success:function (data) {
+                            if(data.status){
+                                ele.text(data.name);
+                                ele.css("background-color","#22ff4f");
+                            }else{
+                                alert(data.message);
+                            }
                         }
-                    }
-                });
+                    });
 
-            }
-        });
-    </script>
+                }
+            });
+        </script>
+    {% endblock %}
   </body>
 </html>
