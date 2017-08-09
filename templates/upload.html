@@ -3,7 +3,31 @@
 {% block css %}
 <style>
     body {
-        background-color: #eee;
+      padding-top: 40px;
+      padding-bottom: 40px;
+      background-color: #eee;
+    }
+    h1 {
+        margin-top: 10px;
+    }
+    .form-signin {
+        border:1px solid grey;
+        padding: 10px;
+      max-width: 330px;
+        margin-bottom: 20px;
+      font-weight: normal;
+      height: auto;
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+      font-size: 16px;
+      z-index: 2;
+    }
+    select{
+        margin-bottom: 20px;
+    }
+    a {
+        font-size: 20px;
     }
 </style>
 {% endblock %}
@@ -12,40 +36,37 @@
 <div class="container-fluid">
 <div class="row">
     <div class="col-sm-12 col-md-12 main">
-        <h1 class="page-header">上传作业</h1>
+        <h1>上传作业</h1>
         <p style="color: red">&nbsp;{{ ret.message }}</p>
-
-        <!-- Single button -->
-        <div class="btn-group">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            请选择提交的作业模块 <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-              {% for rock in rocks %}
-                  <li><a href="#">{{ rock.rock_name }}</a></li>
-              {% endfor %}
-          </ul>
-        </div>
-
-        <!-- Single button -->
-        <div class="btn-group">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            请选择第几次作业 <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-              {% for i in numbers %}
-                  <li><a href="#">{{ i }}</a></li>
-              {% endfor %}
-          </ul>
-        </div>
-
-
-        <form enctype="multipart/form-data" action="/homework/file/" method="post">
-           {% csrf_token %}
+        <form class="form-signin" enctype="multipart/form-data" action="/homework/file/" method="post">
+          {% csrf_token %}
+            <span>请选择作业所属模块： </span>
+            <select name="rock" required>
+              <option value =''>-------------</option>
+                {% for rock in rocks %}
+                  <option value ="{{ rock.rock_name }}">{{ rock.rock_name }}</option>
+                {% endfor %}
+            </select>
+            <br />
+            <span>请选择第几次作业：&nbsp;&nbsp;&nbsp;</span>
+            <select name="order" required>
+                <option value =''>--------------</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
            <input type="file" name="myfile" />
            <br/>
            <input type="submit" value="开始上传"/>
         </form>
+        <a type="button" href="/homework/">返回作业中心</a>
     </div>
 </div>
 </div>

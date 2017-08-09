@@ -1,4 +1,13 @@
 {% extends "base.html" %}
+{% block css %}
+    <style>
+        #searching {
+            margin-top:20px;
+            margin-bottom: 50px;
+            font-size: 16px;
+        }
+    </style>
+{% endblock %}
 
 {% block nav %}
     <li><a name="test" href="/test/?rock=CCNAsec">实验中心</a></li>
@@ -16,8 +25,41 @@
 {% block main %}
     <div class="col-sm-12 col-md-12 main">
     <div class="row">
-        <h1 class="page-header pull-left">作业中心</h1>
-        <button onclick="upload();" class="pull-right btn-lg btn-success">上传作业</button>
+        <h1 class="page-header pull-left">作业检查</h1>
+
+    </div>
+    <div class="row" id="searching">
+        <form action="/homework/" method="get">
+            <span>请选择学员： </span>
+            <select name="username">
+              <option value =''>-------------------------------------</option>
+                {% for user in all_users %}
+                  <option value ="{{ user.0 }}">[{{ user.0 }}]:{{ user.1 }}</option>
+                {% endfor %}
+            </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>请选择作业所属模块： </span>
+            <select name="rock">
+              <option value =''>-------------</option>
+                {% for rock in all_rocks %}
+                  <option value ="{{ rock.rock_name }}">{{ rock.rock_name }}</option>
+                {% endfor %}
+            </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>请选择第几次作业：&nbsp;&nbsp;&nbsp;</span>
+            <select name="order">
+                <option value =''>--------------</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="submit">&nbsp;&nbsp;go&nbsp;&nbsp;</button>
+        </form>
     </div>
     <div class="row">
         <div class="table-responsive">
