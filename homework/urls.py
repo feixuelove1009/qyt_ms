@@ -18,6 +18,6 @@ from . import views
 
 urlpatterns = [
 
-    url(r'^upload/', views.upload),
+    url(r'^file/', views.upload_file),
     url(r'^$', views.homework),
 ]

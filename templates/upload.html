@@ -12,7 +12,40 @@
 <div class="container-fluid">
 <div class="row">
     <div class="col-sm-12 col-md-12 main">
-    <h1 class="page-header">上传作业</h1>
+        <h1 class="page-header">上传作业</h1>
+        <p style="color: red">&nbsp;{{ ret.message }}</p>
+
+        <!-- Single button -->
+        <div class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            请选择提交的作业模块 <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+              {% for rock in rocks %}
+                  <li><a href="#">{{ rock.rock_name }}</a></li>
+              {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Single button -->
+        <div class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            请选择第几次作业 <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+              {% for i in numbers %}
+                  <li><a href="#">{{ i }}</a></li>
+              {% endfor %}
+          </ul>
+        </div>
+
+
+        <form enctype="multipart/form-data" action="/homework/file/" method="post">
+           {% csrf_token %}
+           <input type="file" name="myfile" />
+           <br/>
+           <input type="submit" value="开始上传"/>
+        </form>
     </div>
 </div>
 </div>
