@@ -11,22 +11,27 @@
 
 {% block main %}
     <div class="col-sm-12 col-md-12 main">
-        <h1 class="page-header">作业中心</h1>
-
+    <div class="row">
+        <h1 class="page-header pull-left">作业中心</h1>
+        <button onclick="upload();" class="pull-right btn-lg btn-success">上传作业</button>
+    </div>
+    <div class="row">
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <colgroup>
-                    <col style="width:10%">
-                    <col style="width:15%">
-                    <col style="width:15%">
-                    <col style="width:15%">
-                    <col style="width:15%">
-                    <col style="width:15%">
-                    <col style="width:15%">
-                    </colgroup>
+                    <col style="width:4%">
+                    <col style="width:7%">
+                    <col style="width:6%">
+                    <col style="width:23%">
+                    <col style="width:23%">
+                    <col style="width:23%">
+                    <col style="width:6%">
+                    <col style="width:8%">
+                </colgroup>
                 <thead>
                     <tr>
                       <th class="text-center">编号</th>
+                      <th class="text-center">模块</th>
                       <th class="text-center">第几次</th>
                       <th class="text-center">作业文件</th>
                       <th class="text-center">上传时间</th>
@@ -36,19 +41,37 @@
                     </tr>
                 </thead>
                 <tbody class="text-center">
+
                 {% for homework in homeworks %}
-
-                    {% for rock in rocks%}
-                        {% if homework.rock == rock %}
-                            <tr><td>{{ rock.rock_name }}</td></tr>
-                        {% endif %}
-                    {% endfor %}
-
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ homework.rock.rock_name }}</td>
+                                <td>{{ homework.order }}</td>
+                                <td>{{ homework.rock.rock_name }}-{{ request.session.username }}-{{ homework.order }}</td>
+                                <td>{{ homework.upload_time }}</td>
+                                <td>{{ homework.check_path }}</td>
+                                <td>{{ homework.score }}</td>
+                                <td>
+                                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                </td>
+                            </tr>
                 {% endfor %}
+
 
                 </tbody>
             </table>
         </div>
     </div>
+    </div>
+{% endblock %}
 
+{% block spt %}
+    <script>
+
+    function upload() {
+        window.location.href = "/homework/upload/"
+    }
+    </script>
 {% endblock %}
