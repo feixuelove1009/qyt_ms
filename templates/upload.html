@@ -36,8 +36,8 @@
 <div class="container-fluid">
 <div class="row">
     <div class="col-sm-12 col-md-12 main">
-        <h1>上传作业</h1>
-        <p style="color: red">&nbsp;{{ ret.message }}</p>
+        <h1 style="display: inline">上传作业</h1>
+        <span class="message" style="color: red">&nbsp;{{ ret.message }}</span>
         <form class="form-signin" enctype="multipart/form-data" action="/homework/file/" method="post">
           {% csrf_token %}
             <span>请选择作业所属模块： </span>
@@ -67,10 +67,22 @@
            <input type="submit" value="开始上传"/>
         </form>
         <a type="button" href="/homework/">返回作业中心</a>
+    <hr />
+    <hr />
+
+    <h4>说明：作业必须以doc或docx格式提交，文件名将自动按照【CCNAsec-day1-rsec-testuser-1.doc】类型被修改！
+    </h4>
     </div>
 </div>
 </div>
 {% endblock %}
 
 {% block spt %}
+    <script>
+        $(function () {
+            setTimeout(function () {
+                $("span.message").hide();
+            }, 1000);
+        })
+    </script>
 {% endblock %}

@@ -35,7 +35,6 @@ def upload_file(request):
         rock_name = request.POST.get("rock", None)
         order = request.POST.get("order", None)
         my_file = request.FILES.get("myfile", None)  # 获取上传的文件，如果没有文件，则默认为None
-        print(rock_name, order, my_file)
 
         if not rock_name:
             ret["message"] = "请选择作业所属的模块!"
@@ -59,22 +58,18 @@ def upload_file(request):
 
         # 准备保存文件
         file_name = rock_name + "-day" + order + "-" + request.session['username'] + ".doc"
-        print(file_name)
         destination_folder = os.path.join(settings.BASE_DIR, "uploads", rock_name)
         if not os.path.exists(destination_folder):
             os.makedirs(destination_folder)
         destination_file = os.path.join(destination_folder, file_name)
 
-        # if os.path.exists(destination_file):
-        #     ret["message"] = "作业已经上传过!请不要重复上传!"
-        #     return render(request, "upload.html", {"ret": ret,
-        #                                            "rocks": rocks})
-        # h = models.HomeWork.objects.filter(user__e_name=request.session["username"],
-        #                                 rock__rock_name=rock_name, order=order)
-        # if h and h.check_path:
-        #     ret["message"] = "作业已经批阅，不能再修改了!"
-        #     return render(request, "upload.html", {"ret": ret,
-        #                                            "rocks": rocks})
+        h = models.HomeWork.objects.filter(user__e_name=request.session["username"],
+                                        rock__rock_name=rock_name, order=order)
+
+        if h and h[0].check_path:
+            ret["message"] = "作业已经批阅，不能再修改了!"
+            return render(request, "upload.html", {"ret": ret,
+                                                   "rocks": rocks})
 
         try:
             with open(destination_file, 'wb') as f:  # 打开特定的文件进行二进制的写操作
@@ -103,21 +98,37 @@ def upload_file(request):
     return render(request, "upload.html", {"rocks": rocks})
 
 
+def file_iterator(file_name, chunk_size=512):
+    with open(file_name, "rb") as f:
+        while True:
+            c = f.read(chunk_size)
+            if c:
+                yield c
+            else:
+                break
+
+
 def download_file(request):
-    def file_iterator(file_name, chunk_size=512):
-        with open(file_name, "rb") as f:
-            while True:
-                c = f.read(chunk_size)
-                if c:
-                    yield c
-                else:
-                    break
 
     file = request.GET.get("file_name", None)
     if not file:
         return redirect("/homework/")
+
+    lis = file.split("-")
     rock_name = file.split("-")[0]
-    file_path = os.path.join(settings.BASE_DIR, "uploads", rock_name, file)
+
+    if lis[-1] == "forstudent":
+        result = re.findall(r"(.*?)-day(\d+?)-(.*)-forstudent", file)
+        current_homework = models.HomeWork.objects.get(rock__rock_name=result[0][0],order=result[0][1],user__e_name=result[0][2])
+        if not current_homework.check_path:
+            return redirect("/homework/")
+        score = current_homework.score
+        file = file.rstrip("forstudent")+score+".doc"
+        file_path = os.path.join(settings.BASE_DIR, "uploads", rock_name, file)
+
+    else:
+        file_path = os.path.join(settings.BASE_DIR, "uploads", rock_name, file)
+
     try:
         response = StreamingHttpResponse(file_iterator(file_path))
         response['Content-Type'] = 'application/octet-stream'
@@ -139,8 +150,6 @@ def teacher_upload_file(request):
 
         file_name = request.FILES.get("myfile", None)
         oraginfile_name = request.POST.get("oraginfile", None)
-        print(file_name)
-        print("oraginfile_name >>>", oraginfile_name)
 
         if not file_name:
             ret["message"] = "上传失败！请选择文件！"
@@ -151,22 +160,33 @@ def teacher_upload_file(request):
             return render(request, "teacher_homework.html", {"ret": ret, "homeworks": homeworks})
 
         result = re.findall(r"(.*?)-day(\d+?)-(.*?)-([ABCabc][\+\-]?)\.doc", file_name.name)
-        print(result)
 
         if not result or len(result[0]) != 4 or not result[0][3]:
             ret["message"] = "文件格式不对！请按类似【CCNAsec-day1-username-A+】的格式命名文件！"
             return render(request, "teacher_homework.html", {"ret": ret, "homeworks": homeworks})
 
-        homework_obj = models.HomeWork.objects.get(user__e_name=result[0][2],
-                                                   rock__rock_name=result[0][0], order=result[0][1])
+        rock_name = result[0][0]
+        file_path = os.path.join(settings.BASE_DIR, "uploads", rock_name, file_name.name)
 
-        homework_obj.teacher = choose_models.User.objects.get(e_name=request.session["username"])
-        homework_obj.check_path = file_name.name
-        homework_obj.score = result[0][3].upper()
-        homework_obj.check_time = datetime.datetime.now()
-        homework_obj.save()
+        try:
+            with open(file_path, 'wb') as f:  # 打开特定的文件进行二进制的写操作
+                for chunk in file_name.chunks():  # 分块写入文件
+                    f.write(chunk)
+        except (IOError, OSError) as e:
+            print(e)
+            ret["message"] = "上传过程出现错误，请重新上传！"
+            return render(request, "teacher_homework.html", {"ret": ret, "homeworks": homeworks})
 
-        ret["message"] = "上传成功！"
-        return render(request, "teacher_homework.html", {"ret": ret, "homeworks": homeworks})
+        else:
+            homework_obj = models.HomeWork.objects.get(user__e_name=result[0][2],
+                                                       rock__rock_name=result[0][0], order=result[0][1])
+            homework_obj.teacher = choose_models.User.objects.get(e_name=request.session["username"])
+            homework_obj.check_path = file_name.name
+            homework_obj.score = result[0][3].upper()
+            homework_obj.check_time = datetime.datetime.now()
+            homework_obj.save()
+
+            ret["message"] = "上传成功！"
+            return render(request, "teacher_homework.html", {"ret": ret, "homeworks": homeworks})
 
     return redirect("/homework/")

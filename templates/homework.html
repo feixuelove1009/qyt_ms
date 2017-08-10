@@ -49,7 +49,7 @@
                       <th class="text-center">批阅文件</th>
                       <th class="text-center">批阅时间</th>
                       <th class="text-center">成绩</th>
-                      <th class="text-center">操作</th>
+                      <th class="text-center">下载作业</th>
                     </tr>
                 </thead>
                 <tbody class="text-center">
@@ -85,16 +85,20 @@
                                     <td>{{ homework.score|default:"未知" }}</td>
                                 {% endif %}
                                 <td>
-                                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+{#                                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>#}
+{#                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#}
+                                    <a href="/homework/download/?file_name={{ homework.rock.rock_name }}-day{{ homework.order }}-{{ homework.user.e_name }}-forstudent">
+                                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                    </a>
                                 </td>
                             </tr>
                 {% endfor %}
-
-
                 </tbody>
             </table>
+        <h4>说明：
+                1. 在老师批阅作业之前，可以重新上传作业，但无法下载批阅的作业；
+                2. 在老师批阅过作业后，才可以下载批阅过的作业，但不可以重新上传作业！
+        </h4>
         </div>
     </div>
     </div>

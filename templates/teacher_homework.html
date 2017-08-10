@@ -5,18 +5,19 @@
     <div class="row">
         <h1 class="pull-left">作业检查</h1>
     </div>
-    <p style="text-align: center;font-size: 16px;color: red">{{ ret.message }}</p>
+    <p class="formessage" style="text-align: center;font-size: 16px;color: red">&nbsp;{{ ret.message }}</p>
+
     <div class="row">
         <div>
             <table id="table-for-teacher" class="display display hover cell-border">
                 <colgroup>
                     <col style="width:5%">
-                    <col style="width:16%">
+                    <col style="width:10%">
                     <col style="width:9%">
                     <col style="width:9%">
                     <col style="width:7%">
-                    <col style="width:19%">
-                    <col style="width:21%">
+                    <col style="width:22%">
+                    <col style="width:24%">
                     <col style="width:6%">
                     <col style="width:8%">
                 </colgroup>
@@ -82,10 +83,14 @@
                                 </td>
                             </tr>
                 {% endfor %}
-
-
                 </tbody>
             </table>
+        <br />
+        <span>说明：
+                1. 成绩分A+\A\A-\B+\B\B-\C+\C\C-九档；
+                2. 批阅过的作业，请严格按照【CCNAsec-day1-rsec-testuser-1-B-.doc】的格式修改作业名；
+                3. 必须匹配所针对的作业行点选上传按钮！
+        </span>
         </div>
     </div>
     </div>
@@ -109,6 +114,12 @@
     $("form").change(function () {
         $(this).submit();
     });
+
+    $(function () {
+        setTimeout(function () {
+            $("p").hide();
+        }, 3000);
+    })
 
     </script>
 {% endblock %}
