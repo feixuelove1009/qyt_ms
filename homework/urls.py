@@ -19,5 +19,7 @@ from . import views
 urlpatterns = [
 
     url(r'^file/', views.upload_file),
+    url(r'^teacher_file/', views.teacher_upload_file),
+    url(r'^download/', views.download_file),
     url(r'^$', views.homework),
 ]

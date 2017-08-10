@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block css %}
+    <link href="/static/datatables-1.10.15/css/jquery.dataTables.min.css" rel="stylesheet"/>
+{% endblock %}
+
+
 {% block nav %}
     <li><a name="test" href="/test/?rock=CCNAsec">实验中心</a></li>
     <li class="active">
@@ -19,16 +24,18 @@
         <h1 class="page-header pull-left">作业中心</h1>
         <button onclick="upload();" class="pull-right btn-lg btn-success">上传作业</button>
     </div>
+    <br />
     <div class="row">
         <div class="table-responsive">
-            <table class="table table-striped table-bordered">
+            <table id="table-for-student" class="display hover cell-border">
                 <colgroup>
-                    <col style="width:4%">
+                    <col style="width:5%">
                     <col style="width:7%">
                     <col style="width:6%">
                     <col style="width:23%">
-                    <col style="width:23%">
-                    <col style="width:23%">
+                    <col style="width:10%">
+                    <col style="width:24%">
+                    <col style="width:10%">
                     <col style="width:6%">
                     <col style="width:8%">
                 </colgroup>
@@ -40,6 +47,7 @@
                       <th class="text-center">作业文件</th>
                       <th class="text-center">上传时间</th>
                       <th class="text-center">批阅文件</th>
+                      <th class="text-center">批阅时间</th>
                       <th class="text-center">成绩</th>
                       <th class="text-center">操作</th>
                     </tr>
@@ -51,10 +59,31 @@
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ homework.rock.rock_name }}</td>
                                 <td>{{ homework.order }}</td>
-                                <td>{{ homework.rock.rock_name }}-day{{ homework.order }}-{{ request.session.username }}</td>
+                                <td>{{ homework.rock.rock_name }}-day{{ homework.order }}-{{ homework.user.e_name }}.doc</td>
                                 <td>{{ homework.upload_time|date:"Y-m-d H:i" }}</td>
-                                <td>{{ homework.check_path }}</td>
-                                <td>{{ homework.score }}</td>
+                                <td>{{ homework.check_path|default:"待批阅"  }}</td>
+                                <td>{{ homework.check_time|date:"Y-m-d    H:i"|default:"未知" }}</td>
+                                {% if homework.score == "A+" %}
+                                    <td style="background-color: #5DFC70;font-size: 16px">{{ homework.score|default:"未知" }}</td>
+                                {% elif  homework.score == "A" %}
+                                    <td style="background-color: greenyellow;font-size: 16px">{{ homework.score|default:"未知" }}</td>
+                                {% elif  homework.score == "A-" %}
+                                    <td style="background-color: #78ca66;font-size: 16px">{{ homework.score|default:"未知" }}</td>
+                                {% elif  homework.score == "B+" %}
+                                    <td style="background-color: deepskyblue;font-size: 16px">{{ homework.score|default:"未知" }}</td>
+                                {% elif  homework.score == "B" %}
+                                    <td style="background-color: #49E3F5;font-size: 16px">{{ homework.score|default:"未知" }}</td>
+                                {% elif  homework.score == "B-" %}
+                                    <td style="background-color: #1CD4C8;font-size: 16px">{{ homework.score|default:"未知" }}</td>
+                                {% elif  homework.score == "C+" %}
+                                    <td style="background-color: #FFBF00;font-size: 16px">{{ homework.score|default:"未知" }}</td>
+                                {% elif  homework.score == "C" %}
+                                    <td style="background-color: #FF8000;font-size: 16px">{{ homework.score|default:"未知" }}</td>
+                                {% elif  homework.score == "C-" %}
+                                    <td style="background-color: #FE642E;font-size: 16px">{{ homework.score|default:"未知" }}</td>
+                                {% else %}
+                                    <td>{{ homework.score|default:"未知" }}</td>
+                                {% endif %}
                                 <td>
                                     <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -72,7 +101,12 @@
 {% endblock %}
 
 {% block spt %}
+    <script src="/static/datatables-1.10.15/js/jquery.dataTables.min.js"></script>
+
     <script>
+    $(document).ready( function () {
+        $('#table-for-student').DataTable();
+    } );
 
     function upload() {
         window.location.href = "/homework/file/"

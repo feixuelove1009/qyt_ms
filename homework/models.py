@@ -34,7 +34,7 @@ class HomeWork(models.Model):
     check_path = models.CharField(max_length=512, blank=True, null=True, verbose_name="检查后的文件")
     teacher = models.ForeignKey(choose_models.User, related_name="teacher", blank=True, null=True, verbose_name="批阅老师")
     score = models.CharField(max_length=32, choices=score_choice, blank=True, null=True, verbose_name="作业成绩")
-    upload_time = models.DateTimeField(auto_now=True, verbose_name="作业上传时间")
+    upload_time = models.DateTimeField(verbose_name="作业上传时间")
     check_time = models.DateTimeField(blank=True, null=True, verbose_name="作业批阅时间")
 
     def __str__(self):
